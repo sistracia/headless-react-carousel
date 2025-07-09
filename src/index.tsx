@@ -11,9 +11,9 @@ import {
 
 function noop() {}
 
-type ScrollPosition = "start" | "middle" | "end";
+export type ScrollPosition = "start" | "middle" | "end";
 
-type CarouselContextObject = {
+export type CarouselContextObject = {
   carouselCount: number;
   currentCarousel: number;
   loop: boolean;
@@ -157,7 +157,7 @@ const CarouselContext = createContext<CarouselContextObject>({
 const CarouselItemsContext =
   createContext<React.RefObject<HTMLElement | null> | null>(null);
 
-type CarouselProps<TAs extends React.ElementType> = {
+export type CarouselProps<TAs extends React.ElementType> = {
   as?: TAs;
   header?: React.ReactNode;
   carouselCount?: number;
@@ -209,7 +209,7 @@ export function Carousel<TAs extends React.ElementType = "div">({
   );
 }
 
-type CarouselItemsProps<TAs extends React.ElementType> = {
+export type CarouselItemsProps<TAs extends React.ElementType> = {
   as?: TAs;
 };
 
@@ -235,7 +235,7 @@ export function CarouselItems<TAs extends React.ElementType = "div">({
   );
 }
 
-type CarouselItemProps<TAs extends React.ElementType> = {
+export type CarouselItemProps<TAs extends React.ElementType> = {
   as?: TAs;
   index: number;
 };
@@ -290,7 +290,7 @@ export function CarouselItem<TAs extends React.ElementType = "div">({
   );
 }
 
-type CarouselCountProps<TAs extends React.ElementType> = {
+export type CarouselCountProps<TAs extends React.ElementType> = {
   as?: TAs;
   padStart?: number;
 };
@@ -313,7 +313,7 @@ export function CarouselCount<TAs extends React.ElementType = "span">({
   );
 }
 
-type CarouselMaxProps<TAs extends React.ElementType> = {
+export type CarouselMaxProps<TAs extends React.ElementType> = {
   as?: TAs;
   padStart?: number;
   prefix?: React.ReactNode;
@@ -337,7 +337,7 @@ export function CarouselMax<TAs extends React.ElementType = "span">({
   );
 }
 
-type CarouselPrevProps<TAs extends React.ElementType> = {
+export type CarouselPrevProps<TAs extends React.ElementType> = {
   as?: TAs;
 };
 
@@ -365,7 +365,7 @@ export function CarouselPrev<TAs extends React.ElementType = "button">({
   );
 }
 
-type CarouselNextProps<TAs extends React.ElementType> = {
+export type CarouselNextProps<TAs extends React.ElementType> = {
   as?: TAs;
 };
 
