@@ -1,5 +1,5 @@
 {
-  "name": "headless-react-carousel",
+  "name": "@sist/react-carousel",
   "version": "1.0.0",
   "description": "Headless React component for carousel with scrolling support",
   "type": "module",
