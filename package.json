@@ -1,0 +1,39 @@
+{
+  "name": "headless-react-carousel",
+  "version": "1.0.0",
+  "description": "Headless React component for carousel with scrolling support",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.types.json",
+    "ts:check": "tsc --noEmit"
+  },
+  "keywords": [
+    "react",
+    "headless",
+    "component"
+  ],
+  "author": "sistracia",
+  "license": "MIT",
+  "packageManager": "pnpm@10.11.1",
+  "devDependencies": {
+    "@types/react": "^16.14.65",
+    "tsup": "8.5.0",
+    "typescript": "5.8.3"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
+  }
+}
