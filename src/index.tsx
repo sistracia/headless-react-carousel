@@ -13,11 +13,11 @@ function noop() {}
 
 type ScrollPosition = "start" | "middle" | "end";
 
-type SliderContextObject = {
-  slideCount: number;
-  currentSlide: number;
+type CarouselContextObject = {
+  carouselCount: number;
+  currentCarousel: number;
   loop: boolean;
-  setCurrentSlide: (slide: number) => void;
+  setCurrentCarousel: (carousel: number) => void;
   prev: () => void;
   next: () => void;
   handleScroll: () => void;
@@ -29,42 +29,44 @@ type SliderContextObject = {
 /**
  * Ref - https://iykethe1st.hashnode.dev/a-react-ref-adventure-creating-a-smooth-scrolling-carousel-using-react-and-tailwind-css
  */
-export function useSlider(slideCount: number, loop: boolean) {
+export function useCarousel(carouselCount: number, loop: boolean) {
   const containerRef = useRef<HTMLElement>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentCarousel, setCurrentCarousel] = useState(0);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>("start");
 
-  const prev = useCallback<SliderContextObject["prev"]>(() => {
-    setCurrentSlide((currentSlide) => {
-      const isFirstSlide = currentSlide === 0;
-      if (isFirstSlide && loop) {
-        return slideCount - 1;
+  const prev = useCallback<CarouselContextObject["prev"]>(() => {
+    setCurrentCarousel((currentCarousel) => {
+      const isFirstCarousel = currentCarousel === 0;
+      if (isFirstCarousel && loop) {
+        return carouselCount - 1;
       }
 
-      if (isFirstSlide && !loop) {
-        return currentSlide;
+      if (isFirstCarousel && !loop) {
+        return currentCarousel;
       }
 
-      return --currentSlide;
+      return --currentCarousel;
     });
-  }, [slideCount, loop]);
+  }, [carouselCount, loop]);
 
-  const next = useCallback<SliderContextObject["next"]>(() => {
-    setCurrentSlide((currentSlide) => {
-      const isLastSlide = currentSlide === slideCount - 1;
-      if (isLastSlide && loop) {
+  const next = useCallback<CarouselContextObject["next"]>(() => {
+    setCurrentCarousel((currentCarousel) => {
+      const isLastCarousel = currentCarousel === carouselCount - 1;
+      if (isLastCarousel && loop) {
         return 0;
       }
 
-      if (isLastSlide && !loop) {
-        return currentSlide;
+      if (isLastCarousel && !loop) {
+        return currentCarousel;
       }
 
-      return ++currentSlide;
+      return ++currentCarousel;
     });
-  }, [slideCount, loop]);
+  }, [carouselCount, loop]);
 
-  const handleScroll = useCallback<SliderContextObject["handleScroll"]>(() => {
+  const handleScroll = useCallback<
+    CarouselContextObject["handleScroll"]
+  >(() => {
     const container = containerRef.current;
     if (!container) {
       return;
@@ -86,34 +88,36 @@ export function useSlider(slideCount: number, loop: boolean) {
   }, []);
 
   const scrollToPrevious = useCallback<
-    SliderContextObject["scrollToPrevious"]
+    CarouselContextObject["scrollToPrevious"]
   >(() => {
     const container = containerRef.current;
     if (!container) {
       return;
     }
 
-    const isFirstSlide = currentSlide === 0;
+    const isFirstCarousel = currentCarousel === 0;
     let nextScrollLeft = container.scrollLeft - container.offsetWidth;
-    if (isFirstSlide && loop) {
-      nextScrollLeft = container.offsetWidth * slideCount - 1;
+    if (isFirstCarousel && loop) {
+      nextScrollLeft = container.offsetWidth * carouselCount - 1;
     }
 
     container.scrollTo({
       left: nextScrollLeft,
       behavior: "smooth",
     });
-  }, [currentSlide, slideCount, loop]);
+  }, [currentCarousel, carouselCount, loop]);
 
-  const scrollToNext = useCallback<SliderContextObject["scrollToNext"]>(() => {
+  const scrollToNext = useCallback<
+    CarouselContextObject["scrollToNext"]
+  >(() => {
     const container = containerRef.current;
     if (!container) {
       return;
     }
 
-    const isLastSlide = currentSlide === slideCount - 1;
+    const isLastCarousel = currentCarousel === carouselCount - 1;
     let nextScrollLeft = container.scrollLeft + container.offsetWidth;
-    if (isLastSlide && loop) {
+    if (isLastCarousel && loop) {
       nextScrollLeft = 0;
     }
 
@@ -121,12 +125,12 @@ export function useSlider(slideCount: number, loop: boolean) {
       left: nextScrollLeft,
       behavior: "smooth",
     });
-  }, [currentSlide, slideCount, loop]);
+  }, [currentCarousel, carouselCount, loop]);
 
   return {
     containerRef,
-    currentSlide,
-    setCurrentSlide,
+    currentCarousel,
+    setCurrentCarousel,
     prev,
     next,
     scrollToPrevious,
@@ -137,11 +141,11 @@ export function useSlider(slideCount: number, loop: boolean) {
   };
 }
 
-const SliderContext = createContext<SliderContextObject>({
-  slideCount: 0,
-  currentSlide: 0,
+const CarouselContext = createContext<CarouselContextObject>({
+  carouselCount: 0,
+  currentCarousel: 0,
   loop: true,
-  setCurrentSlide: noop,
+  setCurrentCarousel: noop,
   prev: noop,
   next: noop,
   scrollToNext: noop,
@@ -150,44 +154,44 @@ const SliderContext = createContext<SliderContextObject>({
   handleScroll: noop,
 });
 
-const SliderItemsContext =
+const CarouselItemsContext =
   createContext<React.RefObject<HTMLElement | null> | null>(null);
 
-type SliderProps<TAs extends React.ElementType> = {
+type CarouselProps<TAs extends React.ElementType> = {
   as?: TAs;
   header?: React.ReactNode;
-  slideCount?: number;
+  carouselCount?: number;
   loop?: boolean;
 };
 
-export function Slider<TAs extends React.ElementType = "div">({
+export function Carousel<TAs extends React.ElementType = "div">({
   as: asProp,
   children,
   id,
-  slideCount = 0,
+  carouselCount = 0,
   loop = true,
   ...restProps
-}: SliderProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
+}: CarouselProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "div";
   const {
-    currentSlide,
+    currentCarousel,
     next,
     prev,
-    setCurrentSlide,
+    setCurrentCarousel,
     containerRef,
     scrollToNext,
     scrollToPrevious,
     handleScroll,
     scrollPosition,
-  } = useSlider(slideCount, loop);
+  } = useCarousel(carouselCount, loop);
 
   return (
-    <SliderContext.Provider
+    <CarouselContext.Provider
       value={{
-        slideCount,
-        currentSlide,
+        carouselCount,
+        currentCarousel,
         loop,
-        setCurrentSlide,
+        setCurrentCarousel,
         next,
         prev,
         scrollToNext,
@@ -196,28 +200,28 @@ export function Slider<TAs extends React.ElementType = "div">({
         scrollPosition,
       }}
     >
-      <SliderItemsContext.Provider value={containerRef}>
+      <CarouselItemsContext.Provider value={containerRef}>
         <Component id={id} {...restProps}>
           {children}
         </Component>
-      </SliderItemsContext.Provider>
-    </SliderContext.Provider>
+      </CarouselItemsContext.Provider>
+    </CarouselContext.Provider>
   );
 }
 
-type SliderItemsProps<TAs extends React.ElementType> = {
+type CarouselItemsProps<TAs extends React.ElementType> = {
   as?: TAs;
 };
 
-export function SliderItems<TAs extends React.ElementType = "div">({
+export function CarouselItems<TAs extends React.ElementType = "div">({
   as: asProp,
   children,
   onScroll: onScrollProps = noop,
   ...restProps
-}: SliderItemsProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
+}: CarouselItemsProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "div";
-  const { handleScroll } = useContext(SliderContext);
-  const ref = useContext(SliderItemsContext);
+  const { handleScroll } = useContext(CarouselContext);
+  const ref = useContext(CarouselItemsContext);
 
   const onScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
     handleScroll();
@@ -231,41 +235,41 @@ export function SliderItems<TAs extends React.ElementType = "div">({
   );
 }
 
-type SliderItemProps<TAs extends React.ElementType> = {
+type CarouselItemProps<TAs extends React.ElementType> = {
   as?: TAs;
   index: number;
 };
 
-export function SliderItem<TAs extends React.ElementType = "div">({
+export function CarouselItem<TAs extends React.ElementType = "div">({
   as: asProp,
   index,
   children,
   ...restProps
-}: SliderItemProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
+}: CarouselItemProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "div";
-  const { currentSlide, setCurrentSlide } = useContext(SliderContext);
-  const sliderItemsRef = useContext(SliderItemsContext);
+  const { currentCarousel, setCurrentCarousel } = useContext(CarouselContext);
+  const carouselItemsRef = useContext(CarouselItemsContext);
   const ref = useRef<HTMLElement>(null);
 
   /* biome-ignore lint/correctness/useExhaustiveDependencies: -
-   - `sliderItemsRef` is object returned from `useRef`, it will return the same object
-   - `setCurrentSlide` is `set` function from `useState`, the function is stable identity
+   - `carouselItemsRef` is object returned from `useRef`, it will return the same object
+   - `setCurrentCarousel` is `set` function from `useState`, the function is stable identity
     */
   useEffect(() => {
-    if (!sliderItemsRef?.current) {
+    if (!carouselItemsRef?.current) {
       return;
     }
 
     const onObserve = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setCurrentSlide(index);
+          setCurrentCarousel(index);
         }
       });
     };
 
     const observer = new IntersectionObserver(onObserve, {
-      root: sliderItemsRef.current,
+      root: carouselItemsRef.current,
       rootMargin: "0px",
       threshold: 0.8,
     });
@@ -280,72 +284,71 @@ export function SliderItem<TAs extends React.ElementType = "div">({
   }, []);
 
   return (
-    <Component ref={ref} data-active={index === currentSlide} {...restProps}>
+    <Component ref={ref} data-active={index === currentCarousel} {...restProps}>
       {children}
     </Component>
   );
 }
 
-type SliderCountProps<TAs extends React.ElementType> = {
+type CarouselCountProps<TAs extends React.ElementType> = {
   as?: TAs;
   padStart?: number;
 };
 
-export function SliderCount<TAs extends React.ElementType = "span">({
+export function CarouselCount<TAs extends React.ElementType = "span">({
   as: asProp,
   padStart = 1,
   ...restProps
-}: SliderCountProps<TAs> &
+}: CarouselCountProps<TAs> &
   Omit<React.ComponentPropsWithoutRef<TAs>, "children">) {
   const Component = asProp || "span";
-  const { slideCount, currentSlide } = useContext(SliderContext);
+  const { carouselCount, currentCarousel } = useContext(CarouselContext);
 
   return (
     <Component {...restProps}>
-      {String(slideCount === 0 ? slideCount : currentSlide + 1).padStart(
-        padStart,
-        "0",
-      )}
+      {String(
+        carouselCount === 0 ? carouselCount : currentCarousel + 1,
+      ).padStart(padStart, "0")}
     </Component>
   );
 }
 
-type SliderMaxProps<TAs extends React.ElementType> = {
+type CarouselMaxProps<TAs extends React.ElementType> = {
   as?: TAs;
   padStart?: number;
   prefix?: React.ReactNode;
 };
 
-export function SliderMax<TAs extends React.ElementType = "span">({
+export function CarouselMax<TAs extends React.ElementType = "span">({
   as: asProp,
   padStart = 1,
   prefix,
   ...restProps
-}: SliderMaxProps<TAs> &
+}: CarouselMaxProps<TAs> &
   Omit<React.ComponentPropsWithoutRef<TAs>, "children">) {
   const Component = asProp || "span";
-  const { slideCount } = useContext(SliderContext);
+  const { carouselCount } = useContext(CarouselContext);
 
   return (
     <Component {...restProps}>
       {prefix}
-      {String(slideCount).padStart(padStart, "0")}
+      {String(carouselCount).padStart(padStart, "0")}
     </Component>
   );
 }
 
-type SliderPrevProps<TAs extends React.ElementType> = {
+type CarouselPrevProps<TAs extends React.ElementType> = {
   as?: TAs;
 };
 
-export function SliderPrev<TAs extends React.ElementType = "button">({
+export function CarouselPrev<TAs extends React.ElementType = "button">({
   as: asProp,
   onClick: onClickProps = noop,
   ...restProps
-}: SliderPrevProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
+}: CarouselPrevProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "button";
   const { prev, loop, scrollPosition, scrollToPrevious } =
-    useContext(SliderContext);
+    useContext(CarouselContext);
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     prev();
@@ -362,18 +365,18 @@ export function SliderPrev<TAs extends React.ElementType = "button">({
   );
 }
 
-type SliderNextProps<TAs extends React.ElementType> = {
+type CarouselNextProps<TAs extends React.ElementType> = {
   as?: TAs;
 };
 
-export function SliderNext<TAs extends React.ElementType = "button">({
+export function CarouselNext<TAs extends React.ElementType = "button">({
   as: asProp,
   onClick: onClickProps = noop,
   ...restProps
-}: SliderNextProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
+}: CarouselNextProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "button";
   const { next, loop, scrollPosition, scrollToNext } =
-    useContext(SliderContext);
+    useContext(CarouselContext);
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     next();
