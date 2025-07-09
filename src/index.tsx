@@ -159,7 +159,6 @@ const CarouselItemsContext =
 
 export type CarouselProps<TAs extends React.ElementType> = {
   as?: TAs;
-  header?: React.ReactNode;
   carouselCount?: number;
   loop?: boolean;
 };
