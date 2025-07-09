@@ -15,7 +15,7 @@ npm i @sist/react-carousel
 
 ### Context
 
-#### CarouselContext
+#### `CarouselContext`
 
 `React.Context<CarouselContextObject>`
 
