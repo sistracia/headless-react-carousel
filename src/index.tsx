@@ -27,7 +27,7 @@ export type CarouselContextObject = {
 /**
  * Ref - https://iykethe1st.hashnode.dev/a-react-ref-adventure-creating-a-smooth-scrolling-carousel-using-react-and-tailwind-css
  */
-export function useCarousel(carouselCount: number, loop: boolean) {
+export function useCarousel(carouselCount: number, loop = true) {
   const containerRef = useRef<HTMLElement>(null);
   const [currentCarousel, setCurrentCarousel] = useState(0);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>("start");
