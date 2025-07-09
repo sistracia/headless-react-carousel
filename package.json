@@ -2,7 +2,7 @@
   "name": "@sist/react-carousel",
   "version": "0.0.1",
   "description": "Headless React component for carousel with scrolling support",
-  "repository":{
+  "repository": {
     "type": "git",
     "url": "https://github.com/sistracia/headless-react-carousel"
   },
@@ -10,9 +10,7 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -22,18 +20,21 @@
   },
   "scripts": {
     "build": "tsup && tsc -p tsconfig.types.json",
-    "ts:check": "tsc --noEmit"
+    "format": "biome format --write",
+    "lint": "biome lint --write",
+    "check": "biome check --write",
+    "type-check": "tsc --noEmit",
+    "prepare": "node -e \"if (process.env.NODE_ENV === 'production' || process.env.CI === 'true') process.exit(0); \" || husky"
   },
-  "keywords": [
-    "react",
-    "headless",
-    "component"
-  ],
+  "keywords": ["react", "headless", "component"],
   "author": "sistracia",
   "license": "MIT",
   "packageManager": "pnpm@10.11.1",
   "devDependencies": {
+    "@biomejs/biome": "2.1.1",
     "@types/react": "16.14.65",
+    "husky": "9.1.7",
+    "lint-staged": "16.1.2",
     "tsup": "8.5.0",
     "typescript": "5.8.3"
   },
