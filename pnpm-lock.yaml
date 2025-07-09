@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       react:
-        specifier: ^16.8.0
+        specifier: ^16.8 || ^17 || ^18 || ^19
         version: 16.14.0
     devDependencies:
       '@types/react':
-        specifier: ^16.14.65
+        specifier: 16.14.65
         version: 16.14.65
       tsup:
         specifier: 8.5.0

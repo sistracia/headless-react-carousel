@@ -1,8 +1,9 @@
 {
   "name": "@sist/react-carousel",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Headless React component for carousel with scrolling support",
   "repository":{
+    "type": "git",
     "url": "https://github.com/sistracia/headless-react-carousel"
   },
   "type": "module",
@@ -32,11 +33,11 @@
   "license": "MIT",
   "packageManager": "pnpm@10.11.1",
   "devDependencies": {
-    "@types/react": "^16.14.65",
+    "@types/react": "16.14.65",
     "tsup": "8.5.0",
     "typescript": "5.8.3"
   },
   "peerDependencies": {
-    "react": "^16.8.0"
+    "react": "^16.8 || ^17 || ^18 || ^19"
   }
 }
