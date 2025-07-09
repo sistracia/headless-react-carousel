@@ -141,7 +141,7 @@ export function useCarousel(carouselCount: number, loop = true) {
   };
 }
 
-const CarouselContext = createContext<CarouselContextObject>({
+export const CarouselContext = createContext<CarouselContextObject>({
   carouselCount: 0,
   currentCarousel: 0,
   loop: true,
