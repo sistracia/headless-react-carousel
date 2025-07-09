@@ -136,7 +136,6 @@ export function useCarousel(carouselCount: number, loop = true) {
     scrollToPrevious,
     scrollToNext,
     scrollPosition,
-    setScrollPosition,
     handleScroll,
   };
 }
