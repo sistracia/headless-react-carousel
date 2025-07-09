@@ -28,7 +28,7 @@ export type CarouselContextObject = {
  * Ref - https://iykethe1st.hashnode.dev/a-react-ref-adventure-creating-a-smooth-scrolling-carousel-using-react-and-tailwind-css
  */
 export function useCarousel(carouselCount: number, loop = true) {
-  const containerRef = useRef<HTMLElement>(null);
+  const sliderItemsRef = useRef<HTMLElement>(null);
   const [currentCarousel, setCurrentCarousel] = useState(0);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>("start");
 
@@ -65,7 +65,7 @@ export function useCarousel(carouselCount: number, loop = true) {
   const handleScroll = useCallback<
     CarouselContextObject["handleScroll"]
   >(() => {
-    const container = containerRef.current;
+    const container = sliderItemsRef.current;
     if (!container) {
       return;
     }
@@ -90,7 +90,7 @@ export function useCarousel(carouselCount: number, loop = true) {
   >(() => {
     prev();
 
-    const container = containerRef.current;
+    const container = sliderItemsRef.current;
     if (!container) {
       return;
     }
@@ -112,7 +112,7 @@ export function useCarousel(carouselCount: number, loop = true) {
   >(() => {
     next();
 
-    const container = containerRef.current;
+    const container = sliderItemsRef.current;
     if (!container) {
       return;
     }
@@ -130,7 +130,7 @@ export function useCarousel(carouselCount: number, loop = true) {
   }, [currentCarousel, carouselCount, loop, next]);
 
   return {
-    containerRef,
+    sliderItemsRef,
     currentCarousel,
     setCurrentCarousel,
     scrollToPrevious,
@@ -173,7 +173,7 @@ export function Carousel<TAs extends React.ElementType = "div">({
   const {
     currentCarousel,
     setCurrentCarousel,
-    containerRef,
+    sliderItemsRef,
     scrollToNext,
     scrollToPrevious,
     handleScroll,
@@ -193,7 +193,7 @@ export function Carousel<TAs extends React.ElementType = "div">({
         scrollPosition,
       }}
     >
-      <CarouselItemsContext.Provider value={containerRef}>
+      <CarouselItemsContext.Provider value={sliderItemsRef}>
         <Component id={id} {...restProps}>
           {children}
         </Component>
@@ -214,7 +214,7 @@ export function CarouselItems<TAs extends React.ElementType = "div">({
 }: CarouselItemsProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "div";
   const { handleScroll } = useContext(CarouselContext);
-  const ref = useContext(CarouselItemsContext);
+  const sliderItemsRef = useContext(CarouselItemsContext);
 
   const onScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
     handleScroll();
@@ -222,7 +222,7 @@ export function CarouselItems<TAs extends React.ElementType = "div">({
   };
 
   return (
-    <Component ref={ref} {...restProps} onScroll={onScroll}>
+    <Component ref={sliderItemsRef} {...restProps} onScroll={onScroll}>
       {children}
     </Component>
   );
