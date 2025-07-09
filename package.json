@@ -1,7 +1,10 @@
 {
   "name": "@sist/react-carousel",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Headless React component for carousel with scrolling support",
+  "repository":{
+    "url": "https://github.com/sistracia/headless-react-carousel"
+  },
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
