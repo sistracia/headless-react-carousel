@@ -309,13 +309,11 @@ export function CarouselCount<TAs extends React.ElementType = "span">({
 export type CarouselMaxProps<TAs extends React.ElementType> = {
   as?: TAs;
   padStart?: number;
-  prefix?: React.ReactNode;
 };
 
 export function CarouselMax<TAs extends React.ElementType = "span">({
   as: asProp,
   padStart = 1,
-  prefix,
   ...restProps
 }: CarouselMaxProps<TAs> &
   Omit<React.ComponentPropsWithoutRef<TAs>, "children">) {
@@ -324,7 +322,6 @@ export function CarouselMax<TAs extends React.ElementType = "span">({
 
   return (
     <Component {...restProps}>
-      {prefix}
       {String(carouselCount).padStart(padStart, "0")}
     </Component>
   );
