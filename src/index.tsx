@@ -18,8 +18,6 @@ export type CarouselContextObject = {
   currentCarousel: number;
   loop: boolean;
   setCurrentCarousel: (carousel: number) => void;
-  prev: () => void;
-  next: () => void;
   handleScroll: () => void;
   scrollToNext: () => void;
   scrollToPrevious: () => void;
@@ -34,7 +32,7 @@ export function useCarousel(carouselCount: number, loop: boolean) {
   const [currentCarousel, setCurrentCarousel] = useState(0);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>("start");
 
-  const prev = useCallback<CarouselContextObject["prev"]>(() => {
+  const prev = useCallback(() => {
     setCurrentCarousel((currentCarousel) => {
       const isFirstCarousel = currentCarousel === 0;
       if (isFirstCarousel && loop) {
@@ -49,7 +47,7 @@ export function useCarousel(carouselCount: number, loop: boolean) {
     });
   }, [carouselCount, loop]);
 
-  const next = useCallback<CarouselContextObject["next"]>(() => {
+  const next = useCallback(() => {
     setCurrentCarousel((currentCarousel) => {
       const isLastCarousel = currentCarousel === carouselCount - 1;
       if (isLastCarousel && loop) {
@@ -90,6 +88,8 @@ export function useCarousel(carouselCount: number, loop: boolean) {
   const scrollToPrevious = useCallback<
     CarouselContextObject["scrollToPrevious"]
   >(() => {
+    prev();
+
     const container = containerRef.current;
     if (!container) {
       return;
@@ -105,11 +105,13 @@ export function useCarousel(carouselCount: number, loop: boolean) {
       left: nextScrollLeft,
       behavior: "smooth",
     });
-  }, [currentCarousel, carouselCount, loop]);
+  }, [currentCarousel, carouselCount, loop, prev]);
 
   const scrollToNext = useCallback<
     CarouselContextObject["scrollToNext"]
   >(() => {
+    next();
+
     const container = containerRef.current;
     if (!container) {
       return;
@@ -125,14 +127,12 @@ export function useCarousel(carouselCount: number, loop: boolean) {
       left: nextScrollLeft,
       behavior: "smooth",
     });
-  }, [currentCarousel, carouselCount, loop]);
+  }, [currentCarousel, carouselCount, loop, next]);
 
   return {
     containerRef,
     currentCarousel,
     setCurrentCarousel,
-    prev,
-    next,
     scrollToPrevious,
     scrollToNext,
     scrollPosition,
@@ -146,8 +146,6 @@ const CarouselContext = createContext<CarouselContextObject>({
   currentCarousel: 0,
   loop: true,
   setCurrentCarousel: noop,
-  prev: noop,
-  next: noop,
   scrollToNext: noop,
   scrollToPrevious: noop,
   scrollPosition: "start",
@@ -174,8 +172,6 @@ export function Carousel<TAs extends React.ElementType = "div">({
   const Component = asProp || "div";
   const {
     currentCarousel,
-    next,
-    prev,
     setCurrentCarousel,
     containerRef,
     scrollToNext,
@@ -191,8 +187,6 @@ export function Carousel<TAs extends React.ElementType = "div">({
         currentCarousel,
         loop,
         setCurrentCarousel,
-        next,
-        prev,
         scrollToNext,
         scrollToPrevious,
         handleScroll,
@@ -346,11 +340,10 @@ export function CarouselPrev<TAs extends React.ElementType = "button">({
   ...restProps
 }: CarouselPrevProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "button";
-  const { prev, loop, scrollPosition, scrollToPrevious } =
+  const { loop, scrollPosition, scrollToPrevious } =
     useContext(CarouselContext);
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    prev();
     scrollToPrevious();
     onClickProps(event);
   };
@@ -374,11 +367,9 @@ export function CarouselNext<TAs extends React.ElementType = "button">({
   ...restProps
 }: CarouselNextProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "button";
-  const { next, loop, scrollPosition, scrollToNext } =
-    useContext(CarouselContext);
+  const { loop, scrollPosition, scrollToNext } = useContext(CarouselContext);
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    next();
     scrollToNext();
     onClickProps(event);
   };
