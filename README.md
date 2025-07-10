@@ -3,11 +3,11 @@
 ## Install
 
 ```bash
-pnpm i @sist/react-carousel
+pnpm add @sist/react-carousel
 # or
-npm i @sist/react-carousel
+npm install @sist/react-carousel
 # or
-npm i @sist/react-carousel
+yarn add @sist/react-carousel
 # or other package manager equivalent
 ```
 
