@@ -60,7 +60,7 @@ Props:
 Props:
 
 - `as?: React.ElementType = 'div'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
-- `index: number`, 
+- `index: number`, the index order of the `CarouselItems`.
 
 data-attribute:
 
@@ -71,14 +71,14 @@ data-attribute:
 Props:
 
 - `as?: React.ElementType = 'span'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
-- `padStart?: number`, 
+- `padStart?: number`, the first parameter of `String.padStart`, used to pad the counter number with zeros.
 
 #### `CarouselMax`
 
 Props:
 
 - `as?: React.ElementType = 'span'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
-- `padStart?: number`, 
+- `padStart?: number`, the first parameter of `String.padStart`, used to pad the counter number with zeros.
 
 #### `CarouselPrev`
 
