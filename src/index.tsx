@@ -154,21 +154,17 @@ export const CarouselContext = createContext<CarouselContextObject>({
 const CarouselItemsContext =
   createContext<React.RefObject<HTMLElement | null> | null>(null);
 
-export type CarouselProps<TAs extends React.ElementType> = {
-  as?: TAs;
+export type CarouselProps = {
+  children?: React.ReactNode;
   carouselCount?: number;
   loop?: boolean;
 };
 
-export function Carousel<TAs extends React.ElementType = "div">({
-  as: asProp,
+export function Carousel({
   children,
-  id,
   carouselCount = 0,
   loop = true,
-  ...restProps
-}: CarouselProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
-  const Component = asProp || "div";
+}: CarouselProps) {
   const {
     currentCarousel,
     setCurrentCarousel,
@@ -193,9 +189,7 @@ export function Carousel<TAs extends React.ElementType = "div">({
       }}
     >
       <CarouselItemsContext.Provider value={sliderItemsRef}>
-        <Component id={id} {...restProps}>
-          {children}
-        </Component>
+        {children}
       </CarouselItemsContext.Provider>
     </CarouselContext.Provider>
   );

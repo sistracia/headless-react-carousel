@@ -44,7 +44,7 @@ Returns:
 
 Props:
 
-- `as?: React.ElementType = 'div'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
+- `children?: React.ReactNode`, the `Carousel` children.
 - `carouselCount?: number`, see the `useCarousel` first parameter.
 - `loop?: boolean`, see the `useCarousel` second parameter.
 
