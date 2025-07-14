@@ -54,17 +54,27 @@ Props:
 
 - `as?: React.ElementType = 'div'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
 
-
 #### `CarouselItem`
 
 Props:
 
 - `as?: React.ElementType = 'div'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
-- `index: number`, the index order of the `CarouselItems`.
+- `index: number`, the index order of the `CarouselItem`.
 
 data-attribute:
 
-- `data-active`, `true` when the `CarouselItem` is the main focus, `false` otherwise.
+- `data-active`, `true` when the `index` is equal to the `currentCarousel`, `false` otherwise.
+
+#### `CarouselItemButton`
+
+Props:
+
+- `as?: React.ElementType = 'div'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
+- `index: number`, the index order of the `CarouselItemButton` that represents the `CarouselItem`.
+
+data-attribute:
+
+- `data-active`, `true` when the `index` is equal to the `currentCarousel`, `false` otherwise.
 
 #### `CarouselCount`
 
@@ -126,6 +136,7 @@ import {
   CarouselMax,
   CarouselItems,
   CarouselItem,
+  CarouselItemButton,
   CarouselPrev,
   CarouselNext,
 } from '@sist/react-carousel';
@@ -159,6 +170,9 @@ export function App() {
       <div>
         <CarouselCount /> / <CarouselMax />
         <CarouselPrev>Before</CarouselPrev>
+        <CarouselItemButton index={1}>1</CarouselItemButton>
+        <CarouselItemButton index={2}>2</CarouselItemButton>
+        <CarouselItemButton index={3}>3</CarouselItemButton>
         <CarouselNext>Next</CarouselNext>
       </div>
     </Carousel>

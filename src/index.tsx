@@ -19,6 +19,7 @@ export type CarouselContextObject = {
   loop: boolean;
   setCurrentCarousel: (carousel: number) => void;
   handleScroll: () => void;
+  scrollTo: (index: number) => void;
   scrollToNext: () => void;
   scrollToPrevious: () => void;
   scrollPosition: ScrollPosition;
@@ -85,6 +86,19 @@ export function useCarousel(carouselCount: number, loop = true) {
     setScrollPosition(position);
   }, []);
 
+  const scrollTo = useCallback<CarouselContextObject["scrollTo"]>((index) => {
+    const container = sliderItemsRef.current;
+    if (!container) {
+      return;
+    }
+
+    const nextScrollLeft = index * container.offsetWidth;
+    container.scrollTo({
+      left: nextScrollLeft,
+      behavior: "smooth",
+    });
+  }, []);
+
   const scrollToPrevious = useCallback<
     CarouselContextObject["scrollToPrevious"]
   >(() => {
@@ -133,6 +147,7 @@ export function useCarousel(carouselCount: number, loop = true) {
     sliderItemsRef,
     currentCarousel,
     setCurrentCarousel,
+    scrollTo,
     scrollToPrevious,
     scrollToNext,
     scrollPosition,
@@ -145,6 +160,7 @@ export const CarouselContext = createContext<CarouselContextObject>({
   currentCarousel: 0,
   loop: true,
   setCurrentCarousel: noop,
+  scrollTo: noop,
   scrollToNext: noop,
   scrollToPrevious: noop,
   scrollPosition: "start",
@@ -169,6 +185,7 @@ export function Carousel({
     currentCarousel,
     setCurrentCarousel,
     sliderItemsRef,
+    scrollTo,
     scrollToNext,
     scrollToPrevious,
     handleScroll,
@@ -182,6 +199,7 @@ export function Carousel({
         currentCarousel,
         loop,
         setCurrentCarousel,
+        scrollTo,
         scrollToNext,
         scrollToPrevious,
         handleScroll,
@@ -275,6 +293,34 @@ export function CarouselItem<TAs extends React.ElementType = "div">({
     </Component>
   );
 }
+
+interface CarouselItemButtonProps<TAs extends React.ElementType> {
+  as?: TAs;
+  index: number;
+}
+
+export const CarouselItemButton = <TAs extends React.ElementType = "button">({
+  as: asProp,
+  onClick: onClickProps = noop,
+  index,
+  ...restProps
+}: CarouselItemButtonProps<TAs> & React.ComponentPropsWithoutRef<TAs>) => {
+  const Component = asProp || "button";
+  const { currentCarousel, scrollTo } = useContext(CarouselContext);
+
+  const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    scrollTo(index);
+    onClickProps(event);
+  };
+
+  return (
+    <Component
+      data-active={index === currentCarousel}
+      {...restProps}
+      onClick={onClick}
+    />
+  );
+};
 
 export type CarouselCountProps<TAs extends React.ElementType> = {
   as?: TAs;
