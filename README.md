@@ -170,9 +170,9 @@ export function App() {
       <div>
         <CarouselCount /> / <CarouselMax />
         <CarouselPrev>Before</CarouselPrev>
-        <CarouselItemButton index={1}>1</CarouselItemButton>
-        <CarouselItemButton index={2}>2</CarouselItemButton>
-        <CarouselItemButton index={3}>3</CarouselItemButton>
+        <CarouselItemButton index={0}>1</CarouselItemButton>
+        <CarouselItemButton index={1}>2</CarouselItemButton>
+        <CarouselItemButton index={2}>3</CarouselItemButton>
         <CarouselNext>Next</CarouselNext>
       </div>
     </Carousel>
