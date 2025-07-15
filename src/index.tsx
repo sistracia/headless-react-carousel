@@ -33,7 +33,7 @@ export function useCarousel(carouselCount: number, loop = true) {
   const [currentCarousel, setCurrentCarousel] = useState(0);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>("start");
 
-  const prev = useCallback(() => {
+  const _prev = useCallback(() => {
     setCurrentCarousel((currentCarousel) => {
       const isFirstCarousel = currentCarousel === 0;
       if (isFirstCarousel && loop) {
@@ -48,7 +48,7 @@ export function useCarousel(carouselCount: number, loop = true) {
     });
   }, [carouselCount, loop]);
 
-  const next = useCallback(() => {
+  const _next = useCallback(() => {
     setCurrentCarousel((currentCarousel) => {
       const isLastCarousel = currentCarousel === carouselCount - 1;
       if (isLastCarousel && loop) {
@@ -102,8 +102,6 @@ export function useCarousel(carouselCount: number, loop = true) {
   const scrollToPrevious = useCallback<
     CarouselContextObject["scrollToPrevious"]
   >(() => {
-    prev();
-
     const container = sliderItemsRef.current;
     if (!container) {
       return;
@@ -119,13 +117,11 @@ export function useCarousel(carouselCount: number, loop = true) {
       left: nextScrollLeft,
       behavior: "smooth",
     });
-  }, [currentCarousel, carouselCount, loop, prev]);
+  }, [currentCarousel, carouselCount, loop]);
 
   const scrollToNext = useCallback<
     CarouselContextObject["scrollToNext"]
   >(() => {
-    next();
-
     const container = sliderItemsRef.current;
     if (!container) {
       return;
@@ -141,7 +137,7 @@ export function useCarousel(carouselCount: number, loop = true) {
       left: nextScrollLeft,
       behavior: "smooth",
     });
-  }, [currentCarousel, carouselCount, loop, next]);
+  }, [currentCarousel, carouselCount, loop]);
 
   return {
     sliderItemsRef,
