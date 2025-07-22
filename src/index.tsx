@@ -12,17 +12,18 @@ import {
 function noop() {}
 
 export type ScrollPosition = "start" | "middle" | "end";
+export type CarouselMode = "stop" | "loop";
 
 export type CarouselContextObject = {
   carouselCount: number;
   currentCarousel: number;
-  loop: boolean;
+  mode: CarouselMode;
   setCurrentCarousel: (carousel: number) => void;
-  handleScroll: () => void;
+  scrollPosition: ScrollPosition;
   scrollTo: (index: number) => void;
   scrollToNext: () => void;
   scrollToPrevious: () => void;
-  scrollPosition: ScrollPosition;
+  handleScroll: () => void;
 };
 
 /**
@@ -32,59 +33,6 @@ export function useCarousel(carouselCount: number, loop = true) {
   const sliderItemsRef = useRef<HTMLElement>(null);
   const [currentCarousel, setCurrentCarousel] = useState(0);
   const [scrollPosition, setScrollPosition] = useState<ScrollPosition>("start");
-
-  const _prev = useCallback(() => {
-    setCurrentCarousel((currentCarousel) => {
-      const isFirstCarousel = currentCarousel === 0;
-      if (isFirstCarousel && loop) {
-        return carouselCount - 1;
-      }
-
-      if (isFirstCarousel && !loop) {
-        return currentCarousel;
-      }
-
-      return --currentCarousel;
-    });
-  }, [carouselCount, loop]);
-
-  const _next = useCallback(() => {
-    setCurrentCarousel((currentCarousel) => {
-      const isLastCarousel = currentCarousel === carouselCount - 1;
-      if (isLastCarousel && loop) {
-        return 0;
-      }
-
-      if (isLastCarousel && !loop) {
-        return currentCarousel;
-      }
-
-      return ++currentCarousel;
-    });
-  }, [carouselCount, loop]);
-
-  const handleScroll = useCallback<
-    CarouselContextObject["handleScroll"]
-  >(() => {
-    const container = sliderItemsRef.current;
-    if (!container) {
-      return;
-    }
-
-    const { scrollLeft, offsetWidth, scrollWidth } = container;
-    const maxScroll = scrollWidth - offsetWidth;
-    let position: ScrollPosition = "start";
-
-    if (scrollLeft > 0) {
-      position = "middle";
-    }
-
-    if (scrollLeft === maxScroll) {
-      position = "end";
-    }
-
-    setScrollPosition(position);
-  }, []);
 
   const scrollTo = useCallback<CarouselContextObject["scrollTo"]>((index) => {
     const container = sliderItemsRef.current;
@@ -139,14 +87,37 @@ export function useCarousel(carouselCount: number, loop = true) {
     });
   }, [currentCarousel, carouselCount, loop]);
 
+  const handleScroll = useCallback<
+    CarouselContextObject["handleScroll"]
+  >(() => {
+    const container = sliderItemsRef.current;
+    if (!container) {
+      return;
+    }
+
+    const { scrollLeft, offsetWidth, scrollWidth } = container;
+    const maxScroll = scrollWidth - offsetWidth;
+    let position: ScrollPosition = "start";
+
+    if (scrollLeft > 0) {
+      position = "middle";
+    }
+
+    if (scrollLeft === maxScroll) {
+      position = "end";
+    }
+
+    setScrollPosition(position);
+  }, []);
+
   return {
     sliderItemsRef,
     currentCarousel,
     setCurrentCarousel,
+    scrollPosition,
     scrollTo,
     scrollToPrevious,
     scrollToNext,
-    scrollPosition,
     handleScroll,
   };
 }
@@ -154,52 +125,86 @@ export function useCarousel(carouselCount: number, loop = true) {
 export const CarouselContext = createContext<CarouselContextObject>({
   carouselCount: 0,
   currentCarousel: 0,
-  loop: true,
+  mode: "loop",
   setCurrentCarousel: noop,
+  scrollPosition: "start",
   scrollTo: noop,
   scrollToNext: noop,
   scrollToPrevious: noop,
-  scrollPosition: "start",
   handleScroll: noop,
 });
 
 const CarouselItemsContext =
   createContext<React.RefObject<HTMLElement | null> | null>(null);
 
-export type CarouselProps = {
+export type CarouselStopModeProps = {
+  mode: "stop";
+};
+
+export type CarouselLoopModeProps = {
+  mode: "loop";
+  auto?: boolean;
+  interval?: number;
+};
+
+export type CarouselModeProps = CarouselStopModeProps | CarouselLoopModeProps;
+
+export type CarouselProps = CarouselModeProps & {
   children?: React.ReactNode;
   carouselCount?: number;
-  loop?: boolean;
 };
 
 export function Carousel({
   children,
   carouselCount = 0,
-  loop = true,
+  ...restProps
 }: CarouselProps) {
+  const isLoop = restProps.mode === "loop";
   const {
     currentCarousel,
     setCurrentCarousel,
     sliderItemsRef,
+    scrollPosition,
     scrollTo,
     scrollToNext,
     scrollToPrevious,
     handleScroll,
-    scrollPosition,
-  } = useCarousel(carouselCount, loop);
+  } = useCarousel(carouselCount, isLoop);
+
+  useEffect(() => {
+    if (restProps.mode !== "loop" || !restProps.auto) {
+      return;
+    }
+
+    const interval = restProps.interval || 2000;
+    const autoScrollInterval = setInterval(scrollToNext, interval);
+
+    return () => {
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+      }
+    };
+  }, [
+    scrollToNext,
+    restProps.mode,
+    // @ts-expect-error - The `interval` recognized after the narrowing
+    restProps.interval,
+    // @ts-expect-error - The `auto` recognized after the narrowing
+    restProps.auto,
+  ]);
 
   return (
     <CarouselContext.Provider
       value={{
         carouselCount,
         currentCarousel,
-        loop,
+        mode: restProps.mode,
         setCurrentCarousel,
+        scrollPosition,
         scrollTo,
         scrollToNext,
         scrollToPrevious,
         handleScroll,
-        scrollPosition,
       }}
     >
       <CarouselItemsContext.Provider value={sliderItemsRef}>
@@ -372,8 +377,9 @@ export function CarouselPrev<TAs extends React.ElementType = "button">({
   ...restProps
 }: CarouselPrevProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "button";
-  const { loop, scrollPosition, scrollToPrevious } =
+  const { mode, scrollPosition, scrollToPrevious } =
     useContext(CarouselContext);
+  const isLoop = mode === "loop";
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     scrollToPrevious();
@@ -382,7 +388,7 @@ export function CarouselPrev<TAs extends React.ElementType = "button">({
 
   return (
     <Component
-      disabled={loop ? undefined : scrollPosition === "start"}
+      disabled={isLoop ? undefined : scrollPosition === "start"}
       {...restProps}
       onClick={onClick}
     />
@@ -399,7 +405,8 @@ export function CarouselNext<TAs extends React.ElementType = "button">({
   ...restProps
 }: CarouselNextProps<TAs> & React.ComponentPropsWithoutRef<TAs>) {
   const Component = asProp || "button";
-  const { loop, scrollPosition, scrollToNext } = useContext(CarouselContext);
+  const { mode, scrollPosition, scrollToNext } = useContext(CarouselContext);
+  const isLoop = mode === "loop";
 
   const onClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     scrollToNext();
@@ -408,7 +415,7 @@ export function CarouselNext<TAs extends React.ElementType = "button">({
 
   return (
     <Component
-      disabled={loop ? undefined : scrollPosition === "end"}
+      disabled={isLoop ? undefined : scrollPosition === "end"}
       {...restProps}
       onClick={onClick}
     />

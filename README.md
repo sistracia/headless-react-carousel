@@ -46,19 +46,23 @@ Props:
 
 - `children?: React.ReactNode`, the `Carousel` children.
 - `carouselCount?: number`, see the `useCarousel` first parameter.
-- `loop?: boolean`, see the `useCarousel` second parameter.
+- `mode?: CarouselMode = "loop"`, see the explanation below.
+  - `mode="loop"`, see the `useCarousel` second parameter.
+    - `auto?: boolean`, make the carousel auto scroll.
+    - `interval?: number = 2000`, the interval for the carousel scroll automatically.
+  - `mode="stop"`, see the `CarouselPrev` or the `CarouselNext` description.
 
 #### `CarouselItems`
 
 Props:
 
-- `as?: React.ElementType = 'div'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
+- `as?: React.ElementType = "div"`, the element that is used to render the component, the possible value is an HTML tag, like `"a"`, `"p"`, `"div"`, etc.
 
 #### `CarouselItem`
 
 Props:
 
-- `as?: React.ElementType = 'div'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
+- `as?: React.ElementType = "div"`, the element that is used to render the component, the possible value is an HTML tag, like `"a"`, `"p"`, `"div"`, etc.
 - `index: number`, the index order of the `CarouselItem`.
 
 data-attribute:
@@ -69,7 +73,7 @@ data-attribute:
 
 Props:
 
-- `as?: React.ElementType = 'div'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
+- `as?: React.ElementType = "div"`, the element that is used to render the component, the possible value is an HTML tag, like `"a"`, `"p"`, `"div"`, etc.
 - `index: number`, the index order of the `CarouselItemButton` that represents the `CarouselItem`.
 
 data-attribute:
@@ -80,31 +84,31 @@ data-attribute:
 
 Props:
 
-- `as?: React.ElementType = 'span'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
+- `as?: React.ElementType = "span"`, the element that is used to render the component, the possible value is an HTML tag, like `"a"`, `"p"`, `"div"`, etc.
 - `padStart?: number`, the first parameter of `String.padStart`, used to pad the counter number with zeros.
 
 #### `CarouselMax`
 
 Props:
 
-- `as?: React.ElementType = 'span'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
+- `as?: React.ElementType = "span"`, the element that is used to render the component, the possible value is an HTML tag, like `"a"`, `"p"`, `"div"`, etc.
 - `padStart?: number`, the first parameter of `String.padStart`, used to pad the counter number with zeros.
 
 #### `CarouselPrev`
 
-It will `disabled` when the `Carousel` `loop` is `false` and the first `CarouselItem` is shown.
+It will `disabled` when the `Carousel` `mode` is `"stop"` and the first `CarouselItem` is shown.
 
 Props:
 
-- `as?: React.ElementType = 'button'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
+- `as?: React.ElementType = "button"`, the element that is used to render the component, the possible value is an HTML tag, like `"a"`, `"p"`, `"div"`, etc.
 
 #### `CarouselNext`
 
-It will `disabled` when the `Carousel` `loop` is `false` and the last `CarouselItem` is shown.
+It will `disabled` when the `Carousel` `mode` is `"stop"` and the last `CarouselItem` is shown.
 
 Props:
 
-- `as?: React.ElementType = 'button'`, the element that is used to render the component, the possible value is an HTML tag, like 'a', 'p', 'div', etc.
+- `as?: React.ElementType = "button"`, the element that is used to render the component, the possible value is an HTML tag, like `"a"`, `"p"`, `"div"`, etc.
 
 ### Types
 
@@ -112,13 +116,17 @@ Props:
 
 "start" | "middle" | "end"
 
+#### `CarouselMode`
+
+"stop" | "loop"
+
 #### `CarouselContextObject`
 
 ```ts
 {
   carouselCount: number;
   currentCarousel: number;
-  loop: boolean;
+  mode: CarouselMode;
   setCurrentCarousel: (carousel: number) => void;
   handleScroll: () => void;
   scrollToNext: () => void;
@@ -139,11 +147,11 @@ import {
   CarouselItemButton,
   CarouselPrev,
   CarouselNext,
-} from '@sist/react-carousel';
+} from "@sist/react-carousel";
 
 export function App() {
   return (
-    <Carousel carouselCount={3} loop={true}>
+    <Carousel carouselCount={3} mode="loop">
       <CarouselItems style={carouselItemsStyle}>
         <CarouselItem index={0} style={carouselItemStyle}>
           <img
@@ -180,17 +188,17 @@ export function App() {
 }
 
 const carouselItemsStyle: React.CSSProperties = {
-  display: 'flex',
-  flexWrap: 'nowrap',
-  overflow: 'scroll',
-  width: '100%',
-  scrollSnapType: 'x mandatory',
+  display: "flex",
+  flexWrap: "nowrap",
+  overflow: "scroll",
+  width: "100%",
+  scrollSnapType: "x mandatory",
 };
 
 const carouselItemStyle: React.CSSProperties = {
-  width: '100%',
-  height: 'auto',
-  scrollSnapAlign: 'start',
+  width: "100%",
+  height: "auto",
+  scrollSnapAlign: "start",
 };
 ```
 
