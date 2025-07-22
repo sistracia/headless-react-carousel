@@ -46,7 +46,7 @@ Props:
 
 - `children?: React.ReactNode`, the `Carousel` children.
 - `carouselCount?: number`, see the `useCarousel` first parameter.
-- `mode?: CarouselMode = "loop"`, see the explanation below.
+- `mode: CarouselMode`, see the explanation below.
   - `mode="loop"`, see the `useCarousel` second parameter.
     - `auto?: boolean`, make the carousel auto scroll.
     - `interval?: number = 2000`, the interval for the carousel scroll automatically.
