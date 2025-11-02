@@ -24,7 +24,7 @@
     "lint": "biome lint --write",
     "check": "biome check --write",
     "type-check": "tsc --noEmit",
-    "prepare": "node -e \"if (process.env.NODE_ENV === 'production' || process.env.CI === 'true') process.exit(0); \" || husky"
+    "prepare": "node -e \"if (process.env.NODE_ENV === 'production' || process.env.CI === 'true') process.exit(0); else process.exit(1);\" || husky"
   },
   "keywords": ["react", "headless", "component"],
   "author": "sistracia",
